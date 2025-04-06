@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+  <Tracking>
+    <ImageTarget name="alakazam" size="1.000000 1.394700" />
+    <ImageTarget name="scizor" size="1.000000 1.395095" />
+    <ImageTarget name="ditto" size="1.000000 1.395095" />
+    <ImageTarget name="piplup" size="1.000000 1.401639" />
+    <ImageTarget name="charizard" size="1.000000 1.400000" />
+    <ImageTarget name="miltanktcg" size="1.000000 1.395918" />
+  </Tracking>
+</QCARConfig>
