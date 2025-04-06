@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using UnityEngine.Rendering;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
@@ -8,7 +10,15 @@ public enum BattleState { START, PLAYER1TURN, PLAYER2TURN, WON, LOST }
 public class GMScript : MonoBehaviour
 {
     public List<Player> players = new List<Player>();
+
+    [Header("Manager info")]
     public BattleState state;
+    public GameObject buttons;
+
+    [Header("Texts")]
+    public TextMeshProUGUI[] buttonText = new TextMeshProUGUI[4];
+    public GameObject dialogueBox;
+    public TextMeshProUGUI dialogueText;
 
     public void AddPlayer(Player _player)
     {
@@ -25,11 +35,19 @@ public class GMScript : MonoBehaviour
     public void RemovePlayer(Player _player)
     {
         players.Remove(_player);
+        if (players.Count < 2)
+        {
+            buttons.SetActive(false);
+            dialogueBox.SetActive(false);
+            state = BattleState.START;
+        }
     }
 
     void Start()
     {
         state = BattleState.START;
+        buttons.SetActive(false);
+        dialogueBox.SetActive(false);
         //StartBattle();
     }
 
@@ -37,6 +55,9 @@ public class GMScript : MonoBehaviour
     {
         Player player1 = players[0];
         Player player2 = players[1];
+
+        buttons.SetActive(true);
+        dialogueBox.SetActive(true);
 
         state = BattleState.PLAYER1TURN;
         PlayerTurn(player1, player2);
@@ -64,7 +85,12 @@ public class GMScript : MonoBehaviour
 
     void SetUIBattleNames(Player _activePlayer)
     {
-        //Tomar _activePlayer.moveNames y settear el texto del UI a cada boton
+        for (int i = 0; i < _activePlayer.moveNames.Length; i++)
+        {
+            buttonText[i].text = _activePlayer.moveNames[i];
+        }
+
+        dialogueText.text = _activePlayer.pkmName + "'s turn";
     }
 
     void SetTurn(Player _activePlayer, Player _inactivePlayer)
