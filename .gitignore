@@ -72,3 +72,11 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Vuforia Engine
+/Assets/Vuforia/Editor/VuforiaConfiguration.asset
+/Assets/StreamingAssets/Vuforia/VuforiaMars_ModelTarget.dat
+/Assets/StreamingAssets/Vuforia/VuforiaMars_ObjectTarget.xml
+/Assets/StreamingAssets/Vuforia/VuforiaMars_ObjectTarget_metadata.json
+/Assets/StreamingAssets/Vuforia/YOUR_VUFORIA_LICENSE_KEY.txt
+packages/com.ptc.vuforia.engine-11.0.4.tgz
