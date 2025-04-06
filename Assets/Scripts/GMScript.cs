@@ -10,13 +10,25 @@ public class GMScript : MonoBehaviour
 
     public void AddPlayer(Player _player)
     {
-        players.Add(_player);
+        if (players.Count < 2)
+        {
+            players.Add(_player);
+            if (players.Count == 2)
+            {
+                StartBattle();
+            }
+        }
+    }
+
+    public void RemovePlayer(Player _player)
+    {
+        players.Remove(_player);
     }
 
     void Start()
     {
         state = BattleState.START;
-        StartBattle();
+        //StartBattle();
     }
 
     void StartBattle()

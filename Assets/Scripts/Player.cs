@@ -5,16 +5,11 @@ public class Player : MonoBehaviour
 {
     [Header("Manager")]
     public GMScript gameManager;
-<<<<<<< Updated upstream
-    public int health = 100;
-    public int maxHealth = 100;
-    public string[] moveList = { "Fireball", "Tail Swipe" };
-    public int damage = 20;
-=======
 
     [Header("Pokemon Data")]
     public string pkmName;
     public int pkmMaxHP = 100;
+    public int damage = 20;
 
     [Header("Moves and Attacks")]
     public string[] moveNames = new string[4];
@@ -23,7 +18,6 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool isTurn;
     [HideInInspector] public bool isDead;
     [HideInInspector] public int pkmCurrentHP;
->>>>>>> Stashed changes
 
     void Start()
     {
@@ -33,14 +27,13 @@ public class Player : MonoBehaviour
         isDead = false;
     }
 
-<<<<<<< Updated upstream
     public bool TakeDamage(int damageAmount)
     {
-        health -= damageAmount;
+        pkmCurrentHP -= damageAmount;
 
-        if (health <= 0)
+        if (pkmCurrentHP <= 0)
         {
-            health = 0;
+            pkmCurrentHP = 0;
             return true;
         }
 
@@ -52,21 +45,13 @@ public class Player : MonoBehaviour
         bool isDead = target.TakeDamage(damage);
         if (isDead)
         {
-            Debug.Log(target.name + " ha muerto.");
+            Debug.Log(target.pkmName + " ha muerto.");
+            target.isDead = true;
+            target.PlayerLost();
         }
         else
         {
-            Debug.Log(target.name + " tiene " + target.health + " de salud.");
-=======
-    public void TakeDamage(int _damage)
-    {
-        pkmCurrentHP -= _damage;
-        Debug.Log(pkmCurrentHP.ToString());
-        if (pkmCurrentHP <= 0)
-        {
-            isDead = true;
-            PlayerLost();
->>>>>>> Stashed changes
+            Debug.Log(target.pkmName + " tiene " + target.pkmCurrentHP + " de salud."); 
         }
     }
 
