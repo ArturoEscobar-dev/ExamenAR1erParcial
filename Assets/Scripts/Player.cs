@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
@@ -19,12 +20,25 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool isDead;
     [HideInInspector] public int pkmCurrentHP;
 
+    [Header("UI Elements")]
+    public TextMeshProUGUI healthText;
+
     void Start()
     {
         gameManager = FindAnyObjectByType<GMScript>();
         pkmCurrentHP = pkmMaxHP;
         isTurn = false;
         isDead = false;
+
+        UpdateHealthText();
+    }
+
+    public void UpdateHealthText()
+    {
+        if (healthText != null)
+        {
+            healthText.text = "Vida: " + pkmCurrentHP + " / " + pkmMaxHP;
+        }
     }
 
     public bool TakeDamage(int damageAmount)
@@ -34,9 +48,12 @@ public class Player : MonoBehaviour
         if (pkmCurrentHP <= 0)
         {
             pkmCurrentHP = 0;
+            isDead = true;
+            UpdateHealthText();
             return true;
         }
 
+        UpdateHealthText();
         return false;
     }
 

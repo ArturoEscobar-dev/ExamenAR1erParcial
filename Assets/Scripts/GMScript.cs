@@ -48,7 +48,6 @@ public class GMScript : MonoBehaviour
         state = BattleState.START;
         buttons.SetActive(false);
         dialogueBox.SetActive(false);
-        //StartBattle();
     }
 
     void StartBattle()
@@ -106,7 +105,6 @@ public class GMScript : MonoBehaviour
 
         if (isDead)
         {
-            //state = BattleState.WON;
             EndBattle();
         }
         else
@@ -150,7 +148,6 @@ public class GMScript : MonoBehaviour
         return null;
     }
 
-    //Ligar estas funciones a los botones del UI
     public void Attack1()
     {
         Player activePlayer = GetTurnPlayer();
@@ -178,41 +175,4 @@ public class GMScript : MonoBehaviour
         Player inactivePlayer = GetNonTurnPlayer();
         HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[3]);
     }
-
-    //void Player1Turn(Player player1, Player player2)
-    //{
-    //    SetUIBattleNames(player1);
-    //    SetTurn(player1, player2);
-
-    //    Debug.Log("Jugador 1 ataca");
-    //    bool isDead = player2.TakeDamage(player1.damage);
-
-    //    if (isDead)
-    //    {
-    //        state = BattleState.WON;
-    //        EndBattle();
-    //    }
-    //    else
-    //    {
-    //        state = BattleState.PLAYER2TURN;
-    //        Player2Turn(player1, player2);
-    //    }
-    //}
-
-    //void Player2Turn(Player player1, Player player2)
-    //{
-    //    Debug.Log("Jugador 2 ataca");
-    //    bool isDead = player1.TakeDamage(player2.damage);
-
-    //    if (isDead)
-    //    {
-    //        state = BattleState.LOST;
-    //        EndBattle();
-    //    }
-    //    else
-    //    {
-    //        state = BattleState.PLAYER1TURN;
-    //        Player1Turn(player1, player2);
-    //    }
-    //}
 }
