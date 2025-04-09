@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Rendering;
 using static UnityEditor.Experimental.GraphView.GraphView;
+using System.Collections;
 
 public enum BattleState { START, PLAYER1TURN, PLAYER2TURN, WON, LOST }
 
@@ -12,14 +13,18 @@ public class GMScript : MonoBehaviour
     public List<Player> players = new List<Player>();
 
     [Header("Manager info")]
-    public BattleState state;
     public GameObject buttons;
+    public GameObject healthTextsObject;
+    public GameObject dialogueBox;
+    public AudioSource music;
+    public AudioSource winSFX;
 
     [Header("Texts")]
     public TextMeshProUGUI[] buttonText = new TextMeshProUGUI[4];
-    public GameObject dialogueBox;
+    public TextMeshProUGUI[] healthTexts = new TextMeshProUGUI[2];
     public TextMeshProUGUI dialogueText;
 
+    //--------------Vuforia Add and remove Player--------------
     public void AddPlayer(Player _player)
     {
         if (players.Count < 2)
@@ -39,26 +44,32 @@ public class GMScript : MonoBehaviour
         {
             buttons.SetActive(false);
             dialogueBox.SetActive(false);
-            state = BattleState.START;
+            healthTextsObject.SetActive(false);
+            music.Stop();
         }
     }
 
     void Start()
     {
-        state = BattleState.START;
         buttons.SetActive(false);
         dialogueBox.SetActive(false);
+        healthTextsObject.SetActive(false);
     }
 
+    //--------------Battle Sequences--------------
     void StartBattle()
     {
         Player player1 = players[0];
         Player player2 = players[1];
 
+        SetUIHealth(player1);
+        SetUIHealth(player2);
+
         buttons.SetActive(true);
         dialogueBox.SetActive(true);
+        healthTextsObject.SetActive(true);
+        music.Play();
 
-        state = BattleState.PLAYER1TURN;
         PlayerTurn(player1, player2);
     }
 
@@ -68,20 +79,48 @@ public class GMScript : MonoBehaviour
         SetUIBattleNames(_activePlayer);
     }
 
-    void EndBattle()
+    IEnumerator HandleDamage(Player _activePlayer, Player _inactivePlayer, int _damageToDeal)
     {
-        if (state == BattleState.PLAYER1TURN)
-        {
-            Debug.Log("Player 1 wins");
-        }
-        else if (state == BattleState.PLAYER2TURN)
-        {
-            Debug.Log("Player 2 wins");
-        }
 
-        state = BattleState.WON;
+        dialogueText.text = _activePlayer.pkmName + " atacks";
+
+        buttons.SetActive(false);
+
+        yield return new WaitForSeconds(1.5f);
+
+        bool isDead = _inactivePlayer.TakeDamage(_damageToDeal);
+
+        dialogueText.text = _inactivePlayer.pkmName + " takes " + _damageToDeal.ToString() + " damage";
+
+        SetUIHealth(_inactivePlayer);
+
+        yield return new WaitForSeconds(1.5f);
+
+        if (isDead)
+        {
+            StartCoroutine(EndBattle(_activePlayer, _inactivePlayer));
+        }
+        else
+        {
+            buttons.SetActive(true);
+
+            PlayerTurn(_inactivePlayer, _activePlayer);
+        }
     }
 
+    IEnumerator EndBattle(Player _playerWhoWon, Player _playerWhoLost)
+    {
+        dialogueText.text = _playerWhoWon.pkmName + " wins!";
+
+        music.Stop();
+        winSFX.Play();
+
+        yield return new WaitForSeconds(2.5f);
+
+        _playerWhoLost.PlayerDied();
+    }
+
+    //--------------Value and Text Setters--------------
     void SetUIBattleNames(Player _activePlayer)
     {
         for (int i = 0; i < _activePlayer.moveNames.Length; i++)
@@ -98,29 +137,12 @@ public class GMScript : MonoBehaviour
         _inactivePlayer.isTurn = false;
     }
 
-    void HandleDamage(Player _activePlayer, Player _inactivePlayer, int _damageToDeal)
+    void SetUIHealth(Player _player)
     {
-        Debug.Log(_activePlayer.pkmName + " ataca");
-        bool isDead = _inactivePlayer.TakeDamage(_damageToDeal);
-
-        if (isDead)
-        {
-            EndBattle();
-        }
-        else
-        {
-            if (state == BattleState.PLAYER1TURN)
-            {
-                state = BattleState.PLAYER2TURN;
-            }
-            else if (state == BattleState.PLAYER2TURN)
-            {
-                state = BattleState.PLAYER1TURN;
-            }
-            
-            PlayerTurn(_inactivePlayer, _activePlayer);
-        }
+        healthTexts[players.IndexOf(_player)].text = _player.UpdateHealthText();
     }
+
+    //--------------Player Turn Getters--------------
 
     Player GetTurnPlayer()
     {
@@ -148,31 +170,32 @@ public class GMScript : MonoBehaviour
         return null;
     }
 
+    //--------------Functions for UI Buttons--------------
     public void Attack1()
     {
         Player activePlayer = GetTurnPlayer();
         Player inactivePlayer = GetNonTurnPlayer();
-        HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[0]);
+        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[0]));
     }
 
     public void Attack2()
     {
         Player activePlayer = GetTurnPlayer();
         Player inactivePlayer = GetNonTurnPlayer();
-        HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[1]);
+        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[1]));
     }
 
     public void Attack3() 
     {
         Player activePlayer = GetTurnPlayer();
         Player inactivePlayer = GetNonTurnPlayer();
-        HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[2]);
+        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[2]));
     }
 
     public void Attack4()
     {
         Player activePlayer = GetTurnPlayer();
         Player inactivePlayer = GetNonTurnPlayer();
-        HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[3]);
+        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[3]));
     }
 }

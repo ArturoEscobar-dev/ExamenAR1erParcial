@@ -10,7 +10,6 @@ public class Player : MonoBehaviour
     [Header("Pokemon Data")]
     public string pkmName;
     public int pkmMaxHP = 100;
-    public int damage = 20;
 
     [Header("Moves and Attacks")]
     public string[] moveNames = new string[4];
@@ -20,25 +19,18 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool isDead;
     [HideInInspector] public int pkmCurrentHP;
 
-    [Header("UI Elements")]
-    public TextMeshProUGUI healthText;
-
     void Start()
     {
         gameManager = FindAnyObjectByType<GMScript>();
         pkmCurrentHP = pkmMaxHP;
         isTurn = false;
         isDead = false;
-
-        UpdateHealthText();
     }
 
-    public void UpdateHealthText()
+    //--------------Returns for Game Manager--------------
+    public string UpdateHealthText()
     {
-        if (healthText != null)
-        {
-            healthText.text = "Vida: " + pkmCurrentHP + " / " + pkmMaxHP;
-        }
+        return pkmName+ ": " + pkmCurrentHP + " / " + pkmMaxHP;
     }
 
     public bool TakeDamage(int damageAmount)
@@ -48,30 +40,20 @@ public class Player : MonoBehaviour
         if (pkmCurrentHP <= 0)
         {
             pkmCurrentHP = 0;
-            isDead = true;
-            UpdateHealthText();
             return true;
         }
 
-        UpdateHealthText();
         return false;
     }
 
-    public void Attack(Player target)
+    //--------------Kill Player function--------------
+    public void PlayerDied()
     {
-        bool isDead = target.TakeDamage(damage);
-        if (isDead)
-        {
-            Debug.Log(target.pkmName + " ha muerto.");
-            target.isDead = true;
-            target.PlayerLost();
-        }
-        else
-        {
-            Debug.Log(target.pkmName + " tiene " + target.pkmCurrentHP + " de salud."); 
-        }
+        isDead = true;
+        PlayerLost();
     }
 
+    //--------------Vuforia Player found/lost--------------
     public void PlayerDetected()
     {
         if (!isDead)
@@ -89,8 +71,12 @@ public class Player : MonoBehaviour
         RenderPlayer(false);
     }
 
+    //--------------Appear/Dissapear player--------------
     public void RenderPlayer(bool _active)
     {
-        GetComponent<Renderer>().enabled = _active;
+        foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
+        {
+            renderer.enabled = _active;
+        }
     }
 }
