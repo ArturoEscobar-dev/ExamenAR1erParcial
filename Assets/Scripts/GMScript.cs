@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Rendering;
-using static UnityEditor.Experimental.GraphView.GraphView;
 using System.Collections;
 
 public enum BattleState { START, PLAYER1TURN, PLAYER2TURN, WON, LOST }
