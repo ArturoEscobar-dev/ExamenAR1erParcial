@@ -79,10 +79,10 @@ public class GMScript : MonoBehaviour
         SetUIBattleNames(_activePlayer);
     }
 
-    IEnumerator HandleDamage(Player _activePlayer, Player _inactivePlayer, int _damageToDeal)
+    IEnumerator HandleDamage(Player _activePlayer, Player _inactivePlayer, int _damageToDeal, string _moveName)
     {
 
-        dialogueText.text = _activePlayer.pkmName + " atacks";
+        dialogueText.text = _activePlayer.pkmName + " uses " + _moveName;
 
         buttons.SetActive(false);
 
@@ -175,27 +175,29 @@ public class GMScript : MonoBehaviour
     {
         Player activePlayer = GetTurnPlayer();
         Player inactivePlayer = GetNonTurnPlayer();
-        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[0]));
+        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[0], activePlayer.moveNames[0]));
     }
 
     public void Attack2()
     {
         Player activePlayer = GetTurnPlayer();
         Player inactivePlayer = GetNonTurnPlayer();
-        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[1]));
+        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[1], activePlayer.moveNames[1]));
     }
 
     public void Attack3() 
     {
         Player activePlayer = GetTurnPlayer();
         Player inactivePlayer = GetNonTurnPlayer();
-        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[2]));
+        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[2], activePlayer.moveNames[2]));
     }
 
     public void Attack4()
     {
         Player activePlayer = GetTurnPlayer();
         Player inactivePlayer = GetNonTurnPlayer();
-        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[3]));
+        StartCoroutine(HandleDamage(activePlayer, inactivePlayer, activePlayer.moveDamage[3], activePlayer.moveNames[3]));
     }
+    
+    
 }
